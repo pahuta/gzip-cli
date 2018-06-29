@@ -1,0 +1,25 @@
+{
+  "name": "gzip-cli",
+  "version": "0.0.1",
+  "description": "gzip files",
+  "main": "src/index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pakhuta/gzip-cli.git"
+  },
+  "keywords": [
+    "gzip-cli",
+    "gzip",
+    "glob"
+  ],
+  "author": "Siarhei Pakhuta",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pakhuta/gzip-cli/issues"
+  },
+  "homepage": "https://github.com/pakhuta/gzip-cli#readme",
+  "dependencies": {
+    "glob": "^7.1.2"
+  }
+}
