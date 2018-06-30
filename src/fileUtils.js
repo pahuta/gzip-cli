@@ -2,16 +2,12 @@ const fs = require('fs');
 const glob = require('glob');
 
 class FileUtils {
-    static getReadStream(file) {
-        let stream = fs.createReadStream(file);
-        stream.on('error', process.stderr.write);
-        return stream;
+    static getReadStream(filePath) {
+        return fs.createReadStream(filePath);
     }
 
-    static getWriteStream(file) {
-        let stream = fs.createWriteStream(file);
-        stream.on('error', process.stderr.write);
-        return stream;
+    static getWriteStream(filePath) {
+        return fs.createWriteStream(filePath);
     }
 
     static getGzipedFilePath(filePath) {
@@ -22,11 +18,6 @@ class FileUtils {
         return new Promise((resolve, reject) => {
             glob(pattern, (err, files) => (err) ? (reject(err)) : (resolve(files)));
         });
-    }
-
-    static getFilePaths(patterns) {
-        return Promise.all(patterns.map(pattern => FileUtils.getFilePathsFromGlob(pattern)))
-            .then(filePaths => [].concat(...filePaths));
     }
 }
 

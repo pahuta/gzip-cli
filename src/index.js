@@ -1,6 +1,8 @@
 const zlib = require('zlib');
 const globParent = require('glob-parent');
 const FileUtils = require('./fileUtils');
+const GeneratorUtils = require('./generatorUtils');
+
 
 async function run() {
     const destDir = process.argv.pop();
@@ -16,30 +18,39 @@ async function run() {
         process.exit(1);
     }
 
-
-    const filePaths = await FileUtils.getFilePaths(patterns);
-    gzipFile(filePaths);
+    GeneratorUtils.execute(handlePatterns(patterns));
 }
 
-function gzipFile(filePaths, index = 0) {
-    if (index === filePaths.length) {
-        return;
+function gzipFile(filePath) {
+    return new Promise(resolve => {
+        let destFilePath = FileUtils.getGzipedFilePath(filePath);
+        let readStream = FileUtils.getReadStream(filePath);
+        let writeStream = FileUtils.getWriteStream(destFilePath);
+
+        process.stdout.write(`stream "${filePath}" has been started\n`);
+
+        readStream
+            .pipe(zlib.createGzip())
+            .pipe(writeStream)
+            .on('finish', () => {
+                resolve();
+                process.stdout.write(`stream "${filePath}" has been ended\n`);
+            });
+    });
+}
+
+function* handlePatterns(patterns) {
+    for (let i = 0; i < patterns.length; i++) {
+        yield* gzipPattern(patterns[i]);
     }
+}
 
-    let filePath = filePaths[index];
-    let destFilePath = FileUtils.getGzipedFilePath(filePath);
-    let readStream = FileUtils.getReadStream(filePath);
-    let writeStream = FileUtils.getWriteStream(destFilePath);
+function* gzipPattern(pattern) {
+    let filePaths = yield FileUtils.getFilePathsFromGlob(pattern);
 
-    process.stdout.write(`stream ${index} has been started\n`);
-
-    readStream
-        .pipe(zlib.createGzip())
-        .pipe(writeStream)
-        .on('finish', () => {
-            process.stdout.write(`stream ${index} has been ended\n`);
-            gzipFile(filePaths, ++index);
-        });
+    for (let i = 0; i < filePaths.length; i++) {
+        yield gzipFile(filePaths[i]);
+    }
 }
 
 run();
