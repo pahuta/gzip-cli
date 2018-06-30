@@ -1,36 +1,56 @@
 const zlib = require('zlib');
 const glob = require('glob');
-const util = require('util');
+const globParent = require('glob-parent');
+const FileUtils = require('./fileUtils');
 
-function run() {
+async function run() {
     const destDir = process.argv.pop();
     const patterns = process.argv.slice(2);
 
     if (!patterns) {
-        process.stderr('No one pattern is not specified.');
+        process.stderr.write('No one pattern is not specified.');
         process.exit(1);
     }
 
     if (!destDir) {
-        process.stderr('Destination folder is not specified.');
+        process.stderr.write('Destination folder is not specified.');
         process.exit(1);
     }
 
-    const filePaths = [].concat(...patterns.map(async pattern => await getFilePathsByGlob(pattern)));
-    filePaths.forEach(filePath => gzip(filePaths));
+
+    const filePaths = await getFilePaths(patterns);
+    gzipFile(filePaths);
 }
 
-function getFilePathsByGlob(pattern) {
+function getFilePaths(patterns) {
+    return Promise.all(patterns.map(pattern => getFilePathsFromGlob(pattern)))
+        .then(filePaths => [].concat(...filePaths));
+}
+
+function getFilePathsFromGlob(pattern) {
     return new Promise((resolve, reject) => {
-        glob(pattern, (err, filePaths) => (err) ? (reject(err)) : (resolve(filePaths)));
+        glob(pattern, (err, files) => (err) ? (reject(err)) : (resolve(files)));
     });
 }
 
-function gzip(filePath, options) {
-    return new Promise((resolve, reject) => {
-        zlib.gzip((filePath, options, (err, result) => (err) ? (reject(err)) : (resolve(result))));
-    });
-    return gzip(filePath, options);
+function gzipFile(filePaths, index = 0) {
+    if (index === filePaths.length) {
+        return;
+    }
+
+    let filePath = filePaths[index];
+    let readStream = FileUtils.getReadStream(filePath);
+    let writeStream = FileUtils.getWriteStream(FileUtils.getGzipedFilePath(filePath));
+
+    process.stdout.write(`stream ${index} has been started\n`);
+
+    readStream
+        .pipe(zlib.createGzip())
+        .pipe(writeStream)
+        .on('finish', () => {
+            process.stdout.write(`stream ${index} has been ended\n`);
+            gzipFile(filePaths, ++index);
+        });
 }
 
 run();
