@@ -21,6 +21,7 @@
   "homepage": "https://github.com/pakhuta/gzip-cli#readme",
   "dependencies": {
     "glob": "^7.1.2",
-    "glob-parent": "^3.1.0"
+    "glob-parent": "^3.1.0",
+    "minimist": "^1.2.0"
   }
 }
