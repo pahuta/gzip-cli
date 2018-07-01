@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const zlib = require('zlib');
 const globParent = require('glob-parent');
 const parseArgs = require('minimist');
