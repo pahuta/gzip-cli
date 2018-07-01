@@ -1,4 +1,5 @@
-![npm](https://img.shields.io/npm/v/gzip-cli.svg)
+[![npm](https://img.shields.io/npm/v/gzip-cli.svg)](https://www.npmjs.com/package/gzip-cli)
+[![npm](https://img.shields.io/npm/dm/gzip-cli.svg)](https://www.npmjs.com/package/gzip-cli)
 
 # gzip-cli
 gzip files easily
@@ -22,10 +23,12 @@ Options:
 gzip dist/**/*.js
 ```
 Will gzip all `*.js` files in folder `dist` and output they to the same folder, e.g.
+
 `dist/public/main.js` -> `dist/public/main.js.gz`
 
 ```bash
 gzip source/**/*.js --output=dist
 ```
 Will gzip all `*.js` files in folder `source` and output they to the `dist` folder with saving file paths relative to glob base, e.g.
+
 `source/utils/fileUtils.js` -> `dist/utils/fileUtils.js.gz`
