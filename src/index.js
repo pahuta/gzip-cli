@@ -13,6 +13,10 @@ function run() {
         throw new Error('No one pattern is not specified.');
     }
 
+    if (outputDir) {
+        FileUtils.ensureOutputDir(outputDir);
+    }
+
     GeneratorUtils.execute(handlePatterns(patterns, outputDir));
 }
 

@@ -20,6 +20,14 @@ class FileUtils {
     static getOutputFilePath(filePath, outputDir, globBase) {
         return outputDir ? (path.join(outputDir, `${filePath.slice(globBase.length)}.gz`)) : (`${filePath}.gz`);
     }
+
+    static ensureOutputDir(outputDir) {
+        try {
+            fs.accessSync(outputDir, fs.constants.F_OK);
+        } catch (err) {
+            fs.mkdirSync(outputDir);
+        }
+    }
 }
 
 module.exports = FileUtils;
