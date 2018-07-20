@@ -10,7 +10,7 @@ function gzip(patterns, outputDir) {
         FileUtils.ensureOutputDir(outputDir);
     }
 
-    GeneratorUtils.execute(handlePatterns(patterns, outputDir));
+    return GeneratorUtils.execute(handlePatterns(patterns, outputDir));
 }
 
 function gzipFile(filePath, outputFilePath) {
@@ -35,7 +35,6 @@ function* gzipPattern(pattern, outputDir) {
     for (let i = 0; i < filePaths.length; i++) {
         let filePath = filePaths[i];
         let outputFilePath = FileUtils.getOutputFilePath(filePath, outputDir, globBase);
-
         yield gzipFile(filePath, outputFilePath);
     }
 }
@@ -61,7 +60,8 @@ function run() {
     const patterns = argv._;
 
     if (!patterns.length) {
-        throw new Error('No one pattern is not specified.');
+        process.stderr.write('gzip: no one pattern is not specified. Operation is skipped.');
+        return;
     }
 
     gzip(patterns, outputDir);
