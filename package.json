@@ -4,7 +4,7 @@
   "description": "gzip files",
   "main": "src/index.js",
   "scripts": {
-    "test": "jest --coverage"
+    "test": "jest --coverage --coverageReporters=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
@@ -30,6 +30,7 @@
     "gzip": "./src/index.js"
   },
   "devDependencies": {
+    "coveralls": "^3.0.2",
     "jest": "^23.4.1",
     "rimraf": "^2.6.2"
   }

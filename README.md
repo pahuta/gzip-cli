@@ -1,5 +1,8 @@
 [![npm](https://img.shields.io/npm/v/gzip-cli.svg)](https://www.npmjs.com/package/gzip-cli)
 [![npm](https://img.shields.io/npm/dm/gzip-cli.svg)](https://www.npmjs.com/package/gzip-cli)
+[![Travis](https://img.shields.io/travis/pakhuta/gzip-cli.svg)](https://travis-ci.org/pakhuta/gzip-cli)
+[![Coveralls github](https://img.shields.io/coveralls/github/pakhuta/gzip-cli.svg)](https://coveralls.io/github/pakhuta/gzip-cli?branch=master)
+
 
 # gzip-cli
 Provided ability to gzip files from npm script section. Also you can use it in your code as imported module.
