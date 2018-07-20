@@ -5,15 +5,7 @@ const parseArgs = require('minimist');
 const FileUtils = require('./fileUtils');
 const GeneratorUtils = require('./generatorUtils');
 
-function run() {
-    const argv = getArgv();
-    const outputDir = argv.output;
-    const patterns = argv._;
-
-    if (!patterns.length) {
-        throw new Error('No one pattern is not specified.');
-    }
-
+function gzip(patterns, outputDir) {
     if (outputDir) {
         FileUtils.ensureOutputDir(outputDir);
     }
@@ -59,4 +51,22 @@ function getArgv() {
     });
 }
 
+function run() {
+    if (module.parent) {
+        return;
+    }
+
+    const argv = getArgv();
+    const outputDir = argv.output;
+    const patterns = argv._;
+
+    if (!patterns.length) {
+        throw new Error('No one pattern is not specified.');
+    }
+
+    gzip(patterns, outputDir);
+}
+
 run();
+
+module.exports = gzip;
