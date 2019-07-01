@@ -17,8 +17,10 @@ class FileUtils {
         });
     }
 
-    static getOutputFilePath(filePath, outputDir, globBase) {
-        return outputDir ? (path.join(outputDir, `${filePath.slice(globBase.length)}.gz`)) : (`${filePath}.gz`);
+    static getOutputFilePath(filePath, runParams, globBase) {
+        const {outputDir, outputExtension} = runParams;
+
+        return outputDir ? (path.join(outputDir, `${filePath.slice(globBase.length)}.${outputExtension}`)) : (`${filePath}.${outputExtension}`);
     }
 
     static ensureOutputDir(outputDir) {

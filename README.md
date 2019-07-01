@@ -19,6 +19,7 @@ Usage: gzip [glob patterns]
 
 Options:
 -o, --output               output directory
+-e, --extension            output file extension (default=gz)
 ```
 
 #### CLI example

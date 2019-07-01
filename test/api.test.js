@@ -12,7 +12,11 @@ describe('gzip files from API', () => {
 
     test('Check is gzip file created in the same folder', async () => {
         const outputFile = `${config.generatedFilePath}.gz`;
-        const gzipPromise = gzip([path.join(config.inputDir, '*.*')]);
+        const runParams = {
+            patterns: [path.join(config.inputDir, '*.*')],
+            outputExtension: 'gz'
+        };
+        const gzipPromise = gzip(runParams);
 
         await expect(gzipPromise.then(() => FileUtils.isExist(outputFile)))
             .resolves.toBeUndefined();
@@ -20,7 +24,12 @@ describe('gzip files from API', () => {
 
     test('Check is gzip file created in a custom folder', async () => {
         const outputFile = path.join(config.outputDir, `${config.generatedFile}.gz`);
-        const gzipPromise = gzip([path.join(config.inputDir, '*.*')], config.outputDir);
+        const runParams = {
+            patterns: [path.join(config.inputDir, '*.*')],
+            outputDir: config.outputDir,
+            outputExtension: 'gz'
+        };
+        const gzipPromise = gzip(runParams);
 
         await expect(gzipPromise.then(() => FileUtils.isExist(outputFile)))
             .resolves.toBeUndefined();

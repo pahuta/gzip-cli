@@ -5,12 +5,12 @@ const parseArgs = require('minimist');
 const FileUtils = require('./fileUtils');
 const GeneratorUtils = require('./generatorUtils');
 
-function gzip(patterns, outputDir) {
-    if (outputDir) {
-        FileUtils.ensureOutputDir(outputDir);
+function gzip(runParams) {
+    if (runParams.outputDir) {
+        FileUtils.ensureOutputDir(runParams.outputDir);
     }
 
-    return GeneratorUtils.execute(handlePatterns(patterns, outputDir));
+    return GeneratorUtils.execute(handlePatterns(runParams));
 }
 
 function gzipFile(filePath, outputFilePath) {
@@ -22,19 +22,19 @@ function gzipFile(filePath, outputFilePath) {
     });
 }
 
-function* handlePatterns(patterns, outputDir) {
-    for (let i = 0; i < patterns.length; i++) {
-        yield* gzipPattern(patterns[i], outputDir);
+function* handlePatterns(runParams) {
+    for (let i = 0; i < runParams.patterns.length; i++) {
+        yield* gzipPattern(runParams.patterns[i], runParams);
     }
 }
 
-function* gzipPattern(pattern, outputDir) {
-    let filePaths = yield FileUtils.getFilePathsFromGlob(pattern);
-    let globBase = globParent(pattern);
+function* gzipPattern(pattern, runParams) {
+    const filePaths = yield FileUtils.getFilePathsFromGlob(pattern);
+    const globBase = globParent(pattern);
 
     for (let i = 0; i < filePaths.length; i++) {
-        let filePath = filePaths[i];
-        let outputFilePath = FileUtils.getOutputFilePath(filePath, outputDir, globBase);
+        const filePath = filePaths[i];
+        const outputFilePath = FileUtils.getOutputFilePath(filePath, runParams, globBase);
         yield gzipFile(filePath, outputFilePath);
     }
 }
@@ -43,11 +43,24 @@ function getArgv() {
     return parseArgs(process.argv.slice(2), {
         alias: {
             'output': 'o',
+            'extension': 'e'
         },
+        string: ['output', 'extension'],
         default: {
-            output: null
+            output: null,
+            extension: 'gz'
         }
     });
+}
+
+function getRunParameters() {
+    const argv = getArgv();
+
+    return {
+        patterns: argv._,
+        outputDir: argv.output,
+        outputExtension: argv.extension,
+    };
 }
 
 function run() {
@@ -55,16 +68,14 @@ function run() {
         return;
     }
 
-    const argv = getArgv();
-    const outputDir = argv.output;
-    const patterns = argv._;
+    const runParams = getRunParameters();
 
-    if (!patterns.length) {
+    if (!runParams.patterns.length) {
         process.stderr.write('gzip: no one pattern is not specified. Operation is skipped.');
         return;
     }
 
-    gzip(patterns, outputDir);
+    gzip(runParams);
 }
 
 run();
