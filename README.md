@@ -5,7 +5,7 @@
 
 
 # gzip-cli
-Provided ability to gzip files from npm script section. Also you can use it in your code as imported module.
+Provide possibility to gzip files from npm script section. Also you can use it in your code as imported module.
 
 ### Install
 
