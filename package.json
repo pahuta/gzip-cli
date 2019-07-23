@@ -1,6 +1,6 @@
 {
   "name": "gzip-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "gzip files",
   "main": "src/index.js",
   "scripts": {
@@ -30,7 +30,7 @@
     "gzip": "./src/index.js"
   },
   "devDependencies": {
-    "coveralls": "~3.0.4",
+    "coveralls": "~3.0.5",
     "jest": "~24.8.0",
     "rimraf": "~2.6.3"
   }
