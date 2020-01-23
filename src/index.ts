@@ -1,11 +1,22 @@
-#!/usr/bin/env node
-const zlib = require('zlib');
-const globParent = require('glob-parent');
-const parseArgs = require('minimist');
-const FileUtils = require('./fileUtils');
-const GeneratorUtils = require('./generatorUtils');
+import { createGzip } from 'zlib';
+import * as globParent from 'glob-parent';
+import * as parseArgs from 'minimist';
+import FileUtils from './fileUtils';
+import GeneratorUtils from './generatorUtils';
 
-function gzip(runParams) {
+export interface IRunParameters {
+  patterns: string[],
+  outputDir?: string,
+  outputExtension?: string
+}
+
+interface IArgParams {
+  _: string[];
+  output: string;
+  extension: string;
+}
+
+export function gzip(runParams: IRunParameters): Promise<void> {
     if (runParams.outputDir) {
         FileUtils.ensureOutputDir(runParams.outputDir);
     }
@@ -13,22 +24,22 @@ function gzip(runParams) {
     return GeneratorUtils.execute(handlePatterns(runParams));
 }
 
-function gzipFile(filePath, outputFilePath) {
+function gzipFile(filePath: string, outputFilePath: string): Promise<void> {
     return new Promise(resolve => {
         FileUtils.getReadStream(filePath)
-            .pipe(zlib.createGzip())
+            .pipe(createGzip())
             .pipe(FileUtils.getWriteStream(outputFilePath))
             .on('finish', resolve);
     });
 }
 
-function* handlePatterns(runParams) {
+function* handlePatterns(runParams: IRunParameters): Generator<any, any, any> {
     for (let i = 0; i < runParams.patterns.length; i++) {
         yield* gzipPattern(runParams.patterns[i], runParams);
     }
 }
 
-function* gzipPattern(pattern, runParams) {
+function* gzipPattern(pattern: string, runParams: IRunParameters): Generator<any, any, any> {
     const filePaths = yield FileUtils.getFilePathsFromGlob(pattern);
     const globBase = globParent(pattern);
 
@@ -39,8 +50,8 @@ function* gzipPattern(pattern, runParams) {
     }
 }
 
-function getArgv() {
-    return parseArgs(process.argv.slice(2), {
+function getArgv(): IArgParams {
+    return parseArgs<IArgParams>(process.argv.slice(2), {
         alias: {
             'output': 'o',
             'extension': 'e'
@@ -53,13 +64,13 @@ function getArgv() {
     });
 }
 
-function getRunParameters() {
+function getRunParameters(): IRunParameters {
     const argv = getArgv();
 
     return {
         patterns: argv._,
         outputDir: argv.output,
-        outputExtension: argv.extension,
+        outputExtension: argv.extension
     };
 }
 
@@ -71,7 +82,7 @@ function run() {
     const runParams = getRunParameters();
 
     if (!runParams.patterns.length) {
-        process.stderr.write('gzip: no one pattern is not specified. Operation is skipped.');
+        process.stderr.write('gzip: no one pattern is specified. Operation is skipped.');
         return;
     }
 
@@ -79,5 +90,3 @@ function run() {
 }
 
 run();
-
-module.exports = gzip;

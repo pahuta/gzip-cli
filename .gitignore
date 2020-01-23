@@ -3,3 +3,7 @@
 /coverage
 /inputDir
 /outputDir
+
+.tsbuildinfo
+/gzip-cli-*.tgz
+/dist
