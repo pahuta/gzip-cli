@@ -1,3 +1,2 @@
-/.idea
-.editorconfig
-.npmignore
+/dist/!(index).d.ts
+/!(package.json)

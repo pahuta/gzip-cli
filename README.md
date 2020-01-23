@@ -5,48 +5,98 @@
 
 
 # gzip-cli
-Provide possibility to gzip files from npm script section. Also you can use it in your code as imported module.
+`gzip-cli` provides CLI for compressing files by using compress algorithms such as Gzip and Brotli.
 
 ### Install
 
 ```bash
 npm i gzip-cli
 ```
-### Command Line
-
+## CLI usage
 ```bash
 Usage: gzip [glob patterns]
 
 Options:
 -o, --output               output directory
--e, --extension            output file extension (default=gz)
+-e, --extension            output file extension (default=gz). Also supported a few extensions in one command
 ```
 
 #### CLI example
 ```bash
 gzip dist/**/*.js
 ```
-Will gzip all `*.js` files in folder `dist` and output them to the same folder, e.g.
+All `*.js` files in folder `dist` and its sub-folders will be compressed by Gzip algorithm and put them to the same folder, e.g.
 
-`dist/public/main.js` -> `dist/public/main.js.gz`
+```bash
+gzip dist/**/*.js --extension=gz --extension=br
+```
+All `*.js` files in folder `dist` and its sub-folders will be compressed by Gzip and Brotli algorithm and put them to the same folder, e.g.
+```bash
+dist/public/main.js` -> `dist/public/main.js.gz
+dist/public/main.js` -> `dist/public/main.js.br
+```
 
 ```bash
 gzip source/**/*.js --output=dist
 ```
-Will gzip all `*.js` files in folder `source` and output them to the `dist` folder with saving file paths relative to glob base, e.g.
+All `*.js` files in folder `source` and its sub-folders will be compressed by Gzip algorithm and put them to the `dist` folder with saving file paths relative to a glob pattern base, e.g.
 
 `source/utils/fileUtils.js` -> `dist/utils/fileUtils.js.gz`
 
-## gzip(patterns, [outputDir])
-
-* `patterns` `{Array<String>}` Patterns to be matched
-* `outputDir` `{String}` Output dir
-
-### Code example
-```javascript
-const gzib = require('gzib');
-gzip(['source/**/*.js'], 'dist');
+#### CLI example of using in a "scripts" section of your package.json
+Compress all `*.js` files in folder `dist`:
+```bash
+"scripts": {
+  "gzip": "gzip dist/**/*.js"
+}
 ```
-Will gzip all `*.js` files in folder `source` and its sub-folders and output them to the `dist` folder with saving file paths relative to glob base, e.g.
 
-`source/public/main.js` -> `dist/public/main.js.gz`
+Build Angular application and compress all `*.js` files in folder `dist`:
+```bash
+"scripts": {
+  "build": "ng build && gzip dist/**/*.js"
+}
+```
+
+Build React application and compress all `*.js` files in folder `build` by Gzip and Brotli algorithm:
+```bash
+"scripts": {
+  "build": "react-scripts build && gzip build/**/*.js --extension=gz --extension=br"
+}
+```
+
+## Module usage
+### gzip(options)
+
+* `options.patterns` `{String[]}` Array of patterns to be matched
+* `outputDir` `{String} <optional>` Output dir
+* `outputExtensions` `{String[]} <optional>` Array of output file extension. `br` - for Brotli algorithm, `gz` or others - for Gzip algorithm.
+
+### Module example
+`gzip-cli` can be used like a regular module:
+
+```javascript
+const gzip = require('gzip-cli').gzip;
+gzip({patterns: ['dist/public/**/*.{html,css,js}'], outputExtensions: ['gz', 'br']});
+```
+All `*.html`, `*.css` and `*.js` files in folder `dist/public` and its sub-folders will be compressed by Gzip and Brotli algorithm and put them to the same folder, e.g.
+
+```bash
+dist/public/main.js` -> `dist/public/main.js.gz
+dist/public/main.js` -> `dist/public/main.js.br
+```
+
+`gzip({...})` returns a promise which will be resolved when all resources will be compressed.
+
+#### Module example of using in a Gulp task
+```javascript
+const gzip = require('gzip-cli').gzip;
+gulp.task('compress-static-files', () => {
+  return gzip({patterns: ['dist/public/**/*.{html,css,js}'], outputExtensions: ['gz', 'br']});
+});
+```
+All `*.html`, `*.css` and `*.js` files in folder `dist/public` and its sub-folders will be compressed by Gzip and Brotli algorithm and put them to the same folder.
+
+### Requirements
+
+Node.js >= 12
