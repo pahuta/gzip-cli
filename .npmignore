@@ -1,2 +1,2 @@
 /dist/!(index).d.ts
-/!(package.json)
+/!(package.json|.travis.yml)
