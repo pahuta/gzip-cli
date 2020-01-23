@@ -4,8 +4,10 @@ import { promisify } from 'util';
 import * as rimraf from 'rimraf';
 
 export default class FileUtils {
-  static isExist(filePath: string): Promise<void> {
-    return promisify(access)(filePath, constants.F_OK);
+  static isExist(filePath: string): Promise<boolean> {
+    return promisify(access)(filePath, constants.F_OK)
+      .then(() => true)
+      .catch(() => false);
   }
 
   static getWriteStream(filePath: string): WriteStream {

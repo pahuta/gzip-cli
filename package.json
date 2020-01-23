@@ -8,7 +8,8 @@
     "gzip": "dist/index.js"
   },
   "scripts": {
-    "build": "npm run lint && webpack",
+    "build": "npm run lint && webpack --env.NODE_ENV=production",
+    "build:local": "webpack --env.NODE_ENV=development",
     "lint": "eslint {src,test}/**/*.ts",
     "test": "jest --coverage --coverageReporters=text-lcov | coveralls",
     "test:local": "jest"
@@ -20,7 +21,12 @@
   "keywords": [
     "gzip-cli",
     "gzip",
-    "glob"
+    "glob",
+    "brotli",
+    "cli",
+    "zip",
+    "zlip",
+    "compression"
   ],
   "author": "Siarhei Pakhuta",
   "license": "MIT",

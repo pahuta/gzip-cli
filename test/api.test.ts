@@ -10,31 +10,45 @@ describe('gzip files from API', () => {
     await FileUtils.generateFile(config.generatedFilePath);
   });
 
-  test('Check if gzip file created in the same folder', async () => {
-    const outputFile = `${config.generatedFilePath}.gz`;
+  test('Check if gzip file is created in the same folder', async () => {
     const runParams: IRunParameters = {
       patterns: [join(config.inputDir, '*.*')],
       outputDir: '',
-      outputExtension: 'gz'
+      outputExtensions: ['gz']
     };
 
     await gzip(runParams);
-    const isFileExist = await FileUtils.isExist(outputFile);
+    const isFileExist = await FileUtils.isExist(`${config.generatedFilePath}.gz`);
 
-    expect(isFileExist).toBeUndefined();
+    expect(isFileExist).toBe(true);
   });
 
-  test('Check if gzip file created in a custom folder', async () => {
-    const outputFile = join(config.outputDir, `${config.generatedFile}.gz`);
+  test('Check if gzip and brotli files are created in the same folder', async () => {
+    const runParams: IRunParameters = {
+      patterns: [join(config.inputDir, '*.*')],
+      outputDir: '',
+      outputExtensions: ['gz', 'br']
+    };
+
+    await gzip(runParams);
+
+    let isFileExist = await FileUtils.isExist(`${config.generatedFilePath}.gz`);
+    expect(isFileExist).toBe(true);
+
+    isFileExist = await FileUtils.isExist(`${config.generatedFilePath}.br`);
+    expect(isFileExist).toBe(true);
+  });
+
+  test('Check if gzip file is created in a custom folder', async () => {
     const runParams: IRunParameters = {
       patterns: [join(config.inputDir, '*.*')],
       outputDir: config.outputDir,
-      outputExtension: 'gz'
+      outputExtensions: ['gz']
     };
 
     await gzip(runParams);
-    const isFileExist = await FileUtils.isExist(outputFile);
+    const isFileExist = await FileUtils.isExist(join(config.outputDir, `${config.generatedFile}.gz`));
 
-    expect(isFileExist).toBeUndefined();
+    expect(isFileExist).toBe(true);
   });
 });

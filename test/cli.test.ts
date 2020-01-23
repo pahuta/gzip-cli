@@ -10,35 +10,57 @@ describe('gzip files from CLI', () => {
     await FileUtils.generateFile(config.generatedFilePath);
   });
 
-  test('Check if gzip file created in the same folder', (done) => {
-    const outputFile = `${config.generatedFilePath}.gz`;
+  test('Check if gzip file is created in the same folder', done => {
     const command = `node dist/index.js ${join(config.inputDir, '*.*')}`;
 
-    exec(command, { cwd: process.cwd() }, err => {
+    exec(command, { cwd: process.cwd() }, async err => {
       if (err) {
         return;
       }
-      FileUtils.isExist(outputFile).then(() => done());
+
+      const isFileExist = await FileUtils.isExist(`${config.generatedFilePath}.gz`);
+      expect(isFileExist).toBe(true);
+      done();
     });
   });
 
-  test('Check if gzip file created in a custom folder', (done) => {
-    const outputFile = join(config.outputDir, `${config.generatedFile}.gz`);
+  test('Check if gzip and brotli files are created in the same folder', done => {
+    const command = `node dist/index.js ${join(config.inputDir, '*.*')} --extension=br --extension=gz`;
+
+    exec(command, { cwd: process.cwd() }, async err => {
+      if (err) {
+        return;
+      }
+
+      let isFileExist = await FileUtils.isExist(`${config.generatedFilePath}.gz`);
+      expect(isFileExist).toBe(true);
+
+      isFileExist = await FileUtils.isExist(`${config.generatedFilePath}.br`);
+      expect(isFileExist).toBe(true);
+
+      done();
+    });
+  });
+
+  test('Check if gzip file is created in a custom folder', done => {
     const command = `node dist/index.js ${join(config.inputDir, '*.*')} --output=${config.outputDir}`;
 
-    exec(command, { cwd: process.cwd() }, err => {
+    exec(command, { cwd: process.cwd() }, async err => {
       if (err) {
         return;
       }
-      FileUtils.isExist(outputFile).then(() => done());
+
+      const isFileExist = await FileUtils.isExist(join(config.outputDir, `${config.generatedFile}.gz`));
+      expect(isFileExist).toBe(true);
+      done();
     });
   });
 
-  test('Check error message if pattern is not defined', (done) => {
+  test('Check error message if pattern is not defined', done => {
     const command = `node dist/index.js`;
 
     exec(command, { cwd: process.cwd() }, (err, _stdout, stderr) => {
-      const isErrMsgOK = stderr.includes('gzip: no one pattern is specified. Operation is skipped.');
+      const isErrMsgOK = stderr.includes('gzip-cli: no one pattern is specified. Operation is skipped.');
       if (!err && isErrMsgOK) {
         done();
       } else {
