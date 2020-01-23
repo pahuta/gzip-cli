@@ -1,7 +1,7 @@
 export default class GeneratorUtils {
   static execute(generator: Generator<Promise<string>, Promise<string>, string>, yieldValue?: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      let next = generator.next(yieldValue);
+      const next = generator.next(yieldValue);
 
       if (!next.done) {
         next.value

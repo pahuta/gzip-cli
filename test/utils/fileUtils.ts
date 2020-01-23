@@ -15,10 +15,10 @@ export default class FileUtils {
 
   static generateFile(filePath: string, mbSize = 1): Promise<void> {
     return new Promise((resolve, reject) => {
-      let writableStream = FileUtils.getWriteStream(filePath);
+      const writableStream = FileUtils.getWriteStream(filePath);
 
       writableStream
-        .write(new Buffer(1024 * 1024 * mbSize), () => writableStream.end());
+        .write(Buffer.alloc(1024 * 1024 * mbSize), () => writableStream.end());
 
       writableStream.on('finish', resolve);
       writableStream.on('close', reject);

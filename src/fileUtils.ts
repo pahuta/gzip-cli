@@ -19,7 +19,7 @@ export default class FileUtils {
   }
 
   static getOutputFilePath(filePath: string, runParams: IRunParameters, globBase: string): string {
-    const {outputDir, outputExtension} = runParams;
+    const { outputDir, outputExtension } = runParams;
 
     return outputDir ? (join(outputDir, `${filePath.slice(globBase.length)}.${outputExtension}`)) : (`${filePath}.${outputExtension}`);
   }

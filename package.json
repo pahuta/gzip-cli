@@ -8,7 +8,8 @@
     "gzip": "dist/index.js"
   },
   "scripts": {
-    "build": "webpack",
+    "build": "npm run lint && webpack",
+    "lint": "eslint {src,test}/**/*.ts",
     "test": "jest --coverage --coverageReporters=text-lcov | coveralls",
     "test:local": "jest"
   },
@@ -38,7 +39,15 @@
     "@types/jest": "^24.9.0",
     "@types/minimist": "^1.2.0",
     "@types/rimraf": "^2.0.3",
+    "@typescript-eslint/eslint-plugin": "^2.17.0",
+    "@typescript-eslint/parser": "^2.17.0",
     "coveralls": "~3.0.5",
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
     "jest": "~24.8.0",
     "rimraf": "~2.6.3",
     "ts-jest": "^24.3.0",
