@@ -1,6 +1,5 @@
 import { createGzip, createBrotliCompress } from 'zlib';
 import * as globParent from 'glob-parent';
-import * as parseArgs from 'minimist';
 import FileUtils from './fileUtils';
 import GeneratorUtils from './generatorUtils';
 
@@ -8,12 +7,6 @@ export interface IRunParameters {
   patterns: string[],
   outputDir?: string,
   outputExtensions?: string[]
-}
-
-interface IArgParams {
-  _: string[];
-  output: string;
-  extension: string | string[];
 }
 
 export function gzip(runParams: IRunParameters): Promise<void> {
@@ -56,44 +49,3 @@ function* gzipPattern(pattern: string, runParams: IRunParameters): Generator<any
     yield gzipFile(filePath, outputFilePath, runParams.outputExtensions);
   }
 }
-
-function getArgv(): IArgParams {
-  return parseArgs<IArgParams>(process.argv.slice(2), {
-    alias: {
-      output: 'o',
-      extension: 'e'
-    },
-    string: ['output', 'extension'],
-    default: {
-      output: null,
-      extension: 'gz'
-    }
-  });
-}
-
-function getRunParameters(): IRunParameters {
-  const argv = getArgv();
-
-  return {
-    patterns: argv._,
-    outputDir: argv.output,
-    outputExtensions: Array.isArray(argv.extension) ? argv.extension : [argv.extension]
-  };
-}
-
-function run() {
-  if (module.parent) {
-    return;
-  }
-
-  const runParams = getRunParameters();
-
-  if (!runParams.patterns.length) {
-    process.stderr.write('gzip-cli: no one pattern is specified. Operation is skipped.');
-    return;
-  }
-
-  gzip(runParams);
-}
-
-run();

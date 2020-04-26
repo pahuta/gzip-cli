@@ -32,16 +32,17 @@ gzip dist/**/*.js --extension=gz --extension=br
 ```
 All `*.js` files in folder `dist` and its sub-folders will be compressed by Gzip and Brotli algorithm and put them to the same folder, e.g.
 ```bash
-dist/public/main.js` -> `dist/public/main.js.gz
-dist/public/main.js` -> `dist/public/main.js.br
+dist/public/main.js -> dist/public/main.js.gz
+dist/public/main.js -> dist/public/main.js.br
 ```
 
 ```bash
 gzip source/**/*.js --output=dist
 ```
 All `*.js` files in folder `source` and its sub-folders will be compressed by Gzip algorithm and put them to the `dist` folder with saving file paths relative to a glob pattern base, e.g.
-
-`source/utils/fileUtils.js` -> `dist/utils/fileUtils.js.gz`
+```
+source/utils/fileUtils.js -> dist/utils/fileUtils.js.gz
+```
 
 #### CLI example of using in a "scripts" section of your package.json
 Compress all `*.js` files in folder `dist`:
@@ -82,8 +83,8 @@ gzip({patterns: ['dist/public/**/*.{html,css,js}'], outputExtensions: ['gz', 'br
 All `*.html`, `*.css` and `*.js` files in folder `dist/public` and its sub-folders will be compressed by Gzip and Brotli algorithm and put them to the same folder, e.g.
 
 ```bash
-dist/public/main.js` -> `dist/public/main.js.gz
-dist/public/main.js` -> `dist/public/main.js.br
+dist/public/main.js -> dist/public/main.js.gz
+dist/public/main.js -> dist/public/main.js.br
 ```
 
 `gzip({...})` returns a promise which will be resolved when all resources will be compressed.
