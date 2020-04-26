@@ -1,16 +1,16 @@
 {
   "name": "gzip-cli",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "gzip files",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "gzip": "dist/index.js"
+    "gzip": "dist/cli.js"
   },
   "scripts": {
     "build": "npm run lint && webpack --env.NODE_ENV=production",
     "build:local": "webpack --env.NODE_ENV=development",
-    "lint": "eslint {src,test}/**/*.ts",
+    "lint": "eslint \"{src,test}/**/*.{js,ts}\"",
     "test": "jest --coverage --coverageReporters=text-lcov | coveralls",
     "test:local": "jest"
   },
@@ -47,6 +47,7 @@
     "@types/rimraf": "^2.0.3",
     "@typescript-eslint/eslint-plugin": "^2.17.0",
     "@typescript-eslint/parser": "^2.17.0",
+    "copy-webpack-plugin": "^5.1.1",
     "coveralls": "~3.0.5",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.0",

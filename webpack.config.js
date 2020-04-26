@@ -1,6 +1,6 @@
-const webpack = require('webpack');
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = env => {
   const isProductionBuild = env.NODE_ENV === 'production';
@@ -36,7 +36,7 @@ module.exports = env => {
     },
     externals: [nodeExternals()],
     plugins: [
-      new webpack.BannerPlugin({ banner: '#!/usr/bin/env node', raw: true })
+      new CopyPlugin(['src/cli.js']),
     ]
   };
 };

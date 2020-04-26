@@ -11,7 +11,7 @@ describe('gzip files from CLI', () => {
   });
 
   test('Check if gzip file is created in the same folder', done => {
-    const command = `node dist/index.js ${join(config.inputDir, '*.*')}`;
+    const command = `node dist/cli.js ${join(config.inputDir, '*.*')}`;
 
     exec(command, { cwd: process.cwd() }, async err => {
       if (err) {
@@ -25,7 +25,7 @@ describe('gzip files from CLI', () => {
   });
 
   test('Check if gzip and brotli files are created in the same folder', done => {
-    const command = `node dist/index.js ${join(config.inputDir, '*.*')} --extension=br --extension=gz`;
+    const command = `node dist/cli.js ${join(config.inputDir, '*.*')} --extension=br --extension=gz`;
 
     exec(command, { cwd: process.cwd() }, async err => {
       if (err) {
@@ -43,7 +43,7 @@ describe('gzip files from CLI', () => {
   });
 
   test('Check if gzip file is created in a custom folder', done => {
-    const command = `node dist/index.js ${join(config.inputDir, '*.*')} --output=${config.outputDir}`;
+    const command = `node dist/cli.js ${join(config.inputDir, '*.*')} --output=${config.outputDir}`;
 
     exec(command, { cwd: process.cwd() }, async err => {
       if (err) {
@@ -57,7 +57,7 @@ describe('gzip files from CLI', () => {
   });
 
   test('Check error message if pattern is not defined', done => {
-    const command = `node dist/index.js`;
+    const command = `node dist/cli.js`;
 
     exec(command, { cwd: process.cwd() }, (err, _stdout, stderr) => {
       const isErrMsgOK = stderr.includes('gzip-cli: no one pattern is specified. Operation is skipped.');
