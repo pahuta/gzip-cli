@@ -1,3 +1,17 @@
 language: node_js
+cache: false
 node_js:
-  - "lts/*"
+  - '12'
+  - '14'
+  - '15'
+
+install:
+  - npm ci
+
+script:
+  - npm run build
+
+jobs:
+  include:
+    - stage: test
+      script: npm run test
