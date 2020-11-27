@@ -19,18 +19,19 @@ Usage: gzip [glob patterns]
 Options:
 -o, --output               output directory
 -e, --extension            output file extension (default=gz). Also supported a few extensions in one command
+-i, --ignore               pattern or an array of glob patterns to exclude matches 
 ```
 
 #### CLI example
 ```bash
 gzip dist/**/*.js
 ```
-All `*.js` files in folder `dist` and its sub-folders will be compressed by Gzip algorithm and put them to the same folder, e.g.
+All `*.js` files in folder `dist` and its sub-folders will be compressed by Gzip algorithm and put to the same folder, e.g.
 
 ```bash
 gzip dist/**/*.js --extension=gz --extension=br
 ```
-All `*.js` files in folder `dist` and its sub-folders will be compressed by Gzip and Brotli algorithm and put them to the same folder, e.g.
+All `*.js` files in folder `dist` and its sub-folders will be compressed by Gzip and Brotli algorithm and put to the same folder, e.g.
 ```bash
 dist/public/main.js -> dist/public/main.js.gz
 dist/public/main.js -> dist/public/main.js.br
@@ -39,9 +40,17 @@ dist/public/main.js -> dist/public/main.js.br
 ```bash
 gzip source/**/*.js --output=dist
 ```
-All `*.js` files in folder `source` and its sub-folders will be compressed by Gzip algorithm and put them to the `dist` folder with saving file paths relative to a glob pattern base, e.g.
+All `*.js` files in folder `source` and its sub-folders will be compressed by Gzip algorithm and put to the `dist` folder with saving file paths relative to a glob pattern base, e.g.
 ```
 source/utils/fileUtils.js -> dist/utils/fileUtils.js.gz
+```
+```bash
+gzip source/**/*.js --ignore=**/node_modules/**
+```
+All `*.js` files in folder `source` and its sub-folders (except for "node_modules" and sub-folders) will be compressed and put to the same folder.
+```
+source/utils/fileUtils.js -> dist/utils/fileUtils.js.gz
+source/node_modules/package_name/index.js -> [not processed]
 ```
 
 #### CLI example of using in a "scripts" section of your package.json
@@ -69,25 +78,27 @@ Build React application and compress all `*.js` files in folder `build` by Gzip 
 ## Module usage
 ### gzip(options)
 
-* `options.patterns` `{String[]}` Array of patterns to be matched
-* `outputDir` `{String} <optional>` Output dir
-* `outputExtensions` `{String[]} <optional>` Array of output file extension. `br` - for Brotli algorithm, `gz` or others - for Gzip algorithm.
+`options` `{Object}`
+  * `patterns` `{string[]}` Array of pattern to search for
+  * `ignorePatterns` `{string[]} <optional>` Array of glob patterns to exclude matches
+  * `outputDir` `{string} <optional>` Output dir
+  * `outputExtensions` `{string[]} <optional>` Array of output file extension. `br` - for Brotli algorithm, `gz` or others - for Gzip algorithm.
+return: `{Promise<void>}` promise will be resolved when all resources are compressed.
 
 ### Module example
 `gzip-cli` can be used like a regular module:
 
 ```javascript
 const gzip = require('gzip-cli').gzip;
-gzip({patterns: ['dist/public/**/*.{html,css,js}'], outputExtensions: ['gz', 'br']});
+gzip({patterns: ['dist/public/**/*.{html,css,js,svg}'], outputExtensions: ['gz', 'br'], ignorePatterns: ['**/icons']});
 ```
-All `*.html`, `*.css` and `*.js` files in folder `dist/public` and its sub-folders will be compressed by Gzip and Brotli algorithm and put them to the same folder, e.g.
+All `*.html`, `*.css`, `*.js` and `*.svg` files in folder `dist/public` and its sub-folders (except for sub-folders "icons") will be compressed by Gzip and Brotli algorithm and put to the same folder, e.g.
 
 ```bash
 dist/public/main.js -> dist/public/main.js.gz
 dist/public/main.js -> dist/public/main.js.br
+dist/public/assets/icons/delete.svg -> [not processed]
 ```
-
-`gzip({...})` returns a promise which will be resolved when all resources will be compressed.
 
 #### Module example of using in a Gulp task
 ```javascript
@@ -96,7 +107,7 @@ gulp.task('compress-static-files', () => {
   return gzip({patterns: ['dist/public/**/*.{html,css,js}'], outputExtensions: ['gz', 'br']});
 });
 ```
-All `*.html`, `*.css` and `*.js` files in folder `dist/public` and its sub-folders will be compressed by Gzip and Brotli algorithm and put them to the same folder.
+All `*.html`, `*.css` and `*.js` files in folder `dist/public` and its sub-folders will be compressed by Gzip and Brotli algorithm and put to the same folder.
 
 ### Requirements
 

@@ -12,9 +12,15 @@ export default class FileUtils {
     return createWriteStream(filePath);
   }
 
-  static getFilePathsFromGlob(pattern: string): Promise<string[]> {
+  static getFilePathsFromGlob(pattern: string, runParams: IRunParameters): Promise<string[]> {
     return new Promise((resolve, reject) => {
-      glob(pattern, (err, files) => (err) ? (reject(err)) : (resolve(files)));
+      glob(pattern, { ignore: runParams.ignorePatterns }, (err, files) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(files)
+        }
+      });
     });
   }
 
