@@ -1,7 +1,7 @@
 {
   "name": "gzip-cli",
   "version": "1.2.0-beta.0",
-  "description": "gzip files",
+  "description": "gzip-cli provides CLI for compressing files by using compress algorithms such as Gzip and Brotli",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
@@ -21,8 +21,9 @@
   "keywords": [
     "gzip-cli",
     "gzip",
-    "glob",
+    "brotli-cli",
     "brotli",
+    "glob",
     "cli",
     "zip",
     "zlip",
