@@ -34,6 +34,9 @@
     "url": "https://github.com/pakhuta/gzip-cli/issues"
   },
   "homepage": "https://github.com/pakhuta/gzip-cli#readme",
+  "engines": {
+    "node" : ">=0.12.10"
+  },
   "dependencies": {
     "glob": "^7.1.6",
     "glob-parent": "^5.1.0",
