@@ -25,9 +25,9 @@ export function gzip(runParams: RunParameters): Promise<void> {
   return GeneratorUtils.execute(handlePatterns(params));
 }
 
-function gzipFile(filePath: string, outputFilePath: string, outputExtension: string | string[]): Promise<void> | Promise<void[]> {
+function compressFile(filePath: string, outputFilePath: string, outputExtension: string | string[]): Promise<void> | Promise<void[]> {
   if (Array.isArray(outputExtension)) {
-    return Promise.all(outputExtension.map(extension => gzipFile(filePath, outputFilePath, extension) as Promise<void>));
+    return Promise.all(outputExtension.map(extension => compressFile(filePath, outputFilePath, extension) as Promise<void>));
   }
 
   const outputFilePathWitExtension = `${outputFilePath}.${outputExtension}`;
@@ -43,17 +43,17 @@ function gzipFile(filePath: string, outputFilePath: string, outputExtension: str
 
 function* handlePatterns(runParams: RunParameters): Generator<any, any, any> {
   for (let i = 0; i < runParams.patterns.length; i++) {
-    yield* gzipPattern(runParams.patterns[i], runParams);
+    yield* compressPattern(runParams.patterns[i], runParams);
   }
 }
 
-function* gzipPattern(pattern: string, runParams: RunParameters): Generator<any, any, any> {
+function* compressPattern(pattern: string, runParams: RunParameters): Generator<any, any, any> {
   const filePaths = yield FileUtils.getFilePathsFromGlob(pattern, runParams);
   const globBase = globParent(pattern);
 
   for (let i = 0; i < filePaths.length; i++) {
     const filePath = filePaths[i];
     const outputFilePath = FileUtils.getOutputFilePath(filePath, runParams, globBase);
-    yield gzipFile(filePath, outputFilePath, runParams.outputExtensions);
+    yield compressFile(filePath, outputFilePath, runParams.outputExtensions);
   }
 }

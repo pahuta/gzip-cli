@@ -8,7 +8,7 @@
     "gzip": "dist/cli.js"
   },
   "scripts": {
-    "build": "npm run lint && webpack --env.NODE_ENV=production",
+    "build": "webpack --env.NODE_ENV=production",
     "build:local": "webpack --env.NODE_ENV=development",
     "lint": "eslint \"{src,test}/**/*.{js,ts}\"",
     "test": "jest --maxWorkers=1 --coverage --coverageReporters=text-lcov | coveralls",
