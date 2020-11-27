@@ -7,12 +7,14 @@ function getArgv() {
   return parseArgs(process.argv.slice(2), {
     alias: {
       output: 'o',
-      extension: 'e'
+      extension: 'e',
+      ignore: 'i'
     },
-    string: ['output', 'extension'],
+    string: ['output', 'extension', 'ignore'],
     default: {
       output: null,
-      extension: 'gz'
+      extension: ['gz'],
+      ignore: [],
     }
   });
 }
@@ -22,6 +24,7 @@ function getRunParameters() {
 
   return {
     patterns: argv._,
+    ignorePatterns: Array.isArray(argv.ignore) ? argv.ignore : [argv.ignore],
     outputDir: argv.output,
     outputExtensions: Array.isArray(argv.extension) ? argv.extension : [argv.extension]
   };

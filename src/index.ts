@@ -5,16 +5,24 @@ import GeneratorUtils from './generatorUtils';
 
 export interface IRunParameters {
   patterns: string[],
+  ignorePatterns?: string[],
   outputDir?: string,
   outputExtensions?: string[]
 }
 
+const defaultParams: Partial<IRunParameters> = {
+  outputDir: null,
+  outputExtensions: ['gz'],
+};
+
 export function gzip(runParams: IRunParameters): Promise<void> {
-  if (runParams.outputDir) {
-    FileUtils.ensureOutputDir(runParams.outputDir);
+  const params = {...defaultParams, ...runParams};
+
+  if (params.outputDir) {
+    FileUtils.ensureOutputDir(params.outputDir);
   }
 
-  return GeneratorUtils.execute(handlePatterns(runParams));
+  return GeneratorUtils.execute(handlePatterns(params));
 }
 
 function gzipFile(filePath: string, outputFilePath: string, outputExtension: string | string[]): Promise<void> | Promise<void[]> {
@@ -40,7 +48,7 @@ function* handlePatterns(runParams: IRunParameters): Generator<any, any, any> {
 }
 
 function* gzipPattern(pattern: string, runParams: IRunParameters): Generator<any, any, any> {
-  const filePaths = yield FileUtils.getFilePathsFromGlob(pattern);
+  const filePaths = yield FileUtils.getFilePathsFromGlob(pattern, runParams);
   const globBase = globParent(pattern);
 
   for (let i = 0; i < filePaths.length; i++) {
