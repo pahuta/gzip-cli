@@ -3,20 +3,20 @@ import * as globParent from 'glob-parent';
 import FileUtils from './fileUtils';
 import GeneratorUtils from './generatorUtils';
 
-export interface IRunParameters {
+export interface RunParameters {
   patterns: string[],
   ignorePatterns?: string[],
   outputDir?: string,
   outputExtensions?: string[]
 }
 
-const defaultParams: Partial<IRunParameters> = {
+const defaultParams: Partial<RunParameters> = {
   outputDir: null,
-  outputExtensions: ['gz'],
+  outputExtensions: ['gz']
 };
 
-export function gzip(runParams: IRunParameters): Promise<void> {
-  const params = {...defaultParams, ...runParams};
+export function gzip(runParams: RunParameters): Promise<void> {
+  const params = { ...defaultParams, ...runParams };
 
   if (params.outputDir) {
     FileUtils.ensureOutputDir(params.outputDir);
@@ -41,13 +41,13 @@ function gzipFile(filePath: string, outputFilePath: string, outputExtension: str
   });
 }
 
-function* handlePatterns(runParams: IRunParameters): Generator<any, any, any> {
+function* handlePatterns(runParams: RunParameters): Generator<any, any, any> {
   for (let i = 0; i < runParams.patterns.length; i++) {
     yield* gzipPattern(runParams.patterns[i], runParams);
   }
 }
 
-function* gzipPattern(pattern: string, runParams: IRunParameters): Generator<any, any, any> {
+function* gzipPattern(pattern: string, runParams: RunParameters): Generator<any, any, any> {
   const filePaths = yield FileUtils.getFilePathsFromGlob(pattern, runParams);
   const globBase = globParent(pattern);
 

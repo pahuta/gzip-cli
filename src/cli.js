@@ -14,7 +14,7 @@ function getArgv() {
     default: {
       output: null,
       extension: ['gz'],
-      ignore: [],
+      ignore: []
     }
   });
 }

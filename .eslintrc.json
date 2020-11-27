@@ -47,7 +47,6 @@
     "no-return-assign": "off",
     "no-prototype-builtins": "off",
     "prefer-promise-reject-errors": "off",
-    "@typescript-eslint/interface-name-prefix": ["error", { "prefixWithI": "always" }],
     "no-unused-vars": "off",
     "generator-star-spacing": ["error", {"before": false, "after": true}],
     "yield-star-spacing": ["error", {"before": false, "after": true}]

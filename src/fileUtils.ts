@@ -1,7 +1,7 @@
 import { join } from 'path';
 import { accessSync, constants, mkdirSync, createReadStream, createWriteStream, ReadStream, WriteStream } from 'fs';
 import * as glob from 'glob';
-import { IRunParameters } from './index';
+import { RunParameters } from './index';
 
 export default class FileUtils {
   static getReadStream(filePath: string): ReadStream {
@@ -12,19 +12,19 @@ export default class FileUtils {
     return createWriteStream(filePath);
   }
 
-  static getFilePathsFromGlob(pattern: string, runParams: IRunParameters): Promise<string[]> {
+  static getFilePathsFromGlob(pattern: string, runParams: RunParameters): Promise<string[]> {
     return new Promise((resolve, reject) => {
       glob(pattern, { ignore: runParams.ignorePatterns }, (err, files) => {
         if (err) {
-          reject(err)
+          reject(err);
         } else {
-          resolve(files)
+          resolve(files);
         }
       });
     });
   }
 
-  static getOutputFilePath(filePath: string, runParams: IRunParameters, globBase: string): string {
+  static getOutputFilePath(filePath: string, runParams: RunParameters, globBase: string): string {
     const { outputDir } = runParams;
 
     return outputDir ? join(outputDir, filePath.slice(globBase.length)) : filePath;

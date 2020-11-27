@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { gzip, IRunParameters } from '../src';
+import { gzip, RunParameters } from '../src';
 import FileUtils from './utils/fileUtils';
 import config from './config';
 
@@ -11,7 +11,7 @@ describe('gzip files from API', () => {
   });
 
   test('Check if gzip file is created in the same folder', async () => {
-    const runParams: IRunParameters = {
+    const runParams: RunParameters = {
       patterns: [join(config.inputDir, '*.*')],
       outputExtensions: ['gz']
     };
@@ -23,7 +23,7 @@ describe('gzip files from API', () => {
   });
 
   test('Check if gzip and brotli files are created in the same folder', async () => {
-    const runParams: IRunParameters = {
+    const runParams: RunParameters = {
       patterns: [join(config.inputDir, '*.*')],
       outputExtensions: ['gz', 'br']
     };
@@ -38,7 +38,7 @@ describe('gzip files from API', () => {
   });
 
   test('Check if gzip file is created in a custom folder', async () => {
-    const runParams: IRunParameters = {
+    const runParams: RunParameters = {
       patterns: [join(config.inputDir, '*.*')],
       outputDir: config.outputDir,
       outputExtensions: ['gz']
@@ -62,7 +62,7 @@ describe('gzip files from API', () => {
     });
 
     test('should skip files if they match ignore pattern', async () => {
-      const runParams: IRunParameters = {
+      const runParams: RunParameters = {
         patterns: [join(config.inputDir, '**/*.*')],
         ignorePatterns: [`**/${ignoreFolder}/**`],
         outputExtensions: ['gz']
