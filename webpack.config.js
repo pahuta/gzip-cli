@@ -36,7 +36,7 @@ module.exports = env => {
     },
     externals: [nodeExternals()],
     plugins: [
-      new CopyPlugin(['src/cli.js']),
+      new CopyPlugin(['src/cli.js'])
     ]
   };
 };
