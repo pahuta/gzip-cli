@@ -11,7 +11,12 @@ install:
 script:
   - npm run build
 
+#jobs:
+#  include:
+#    - stage: test
+#      script: npm run test
+
 jobs:
   include:
-    - stage: test
+    - name: Job 1
       script: npm run test
